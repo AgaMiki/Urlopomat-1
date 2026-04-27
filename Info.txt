@@ -1,0 +1,12 @@
+Wpisz w terminal by odpalić serwer:
+1. Aktywuj virtual environment
+.\urlop.venv\Scripts\Activate.ps1
+2. Uruchom serwer Django
+python manage.py runserver
+
+
+Lista zadań :
+->Odpalić baze danych
+-> stworzyć strone główną:
+    -> wstepny pomysł na urlop
+    -> KALENDARZ!!!!
