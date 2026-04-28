@@ -7,10 +7,11 @@
 </head>
 <body class="bg-light d-flex align-items-center justify-content-center" style="height: 100vh;">
 
+    
     <div class="text-center">
-        <h1 class="display-3 text-primary">Witaj! 👋</h1>
+        <h1 class="display-3 text-primary">Witaj! 👋</h1> 
         <p class="lead">Zalogowałaś się pomyślnie do systemu Urlopomat.</p>
-        <a href="/" class="btn btn-secondary mt-3">Wyloguj się</a>
+       <a href="{% url 'urlop_dashboard' %}" class="btn btn-secondary">Wyloguj (powrót)</a>
     </div>
 
 </body>

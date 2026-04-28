@@ -3,8 +3,8 @@ Wpisz w terminal by odpalić serwer:
 .\urlop.venv\Scripts\Activate.ps1
 2. Uruchom serwer Django
 python manage.py runserver
-
-
+---------------------------------------------------------
+Tutaj możecie pisać co mam dodać itp.
 Lista zadań :
 ->Odpalić baze danych
 -> stworzyć strone główną:

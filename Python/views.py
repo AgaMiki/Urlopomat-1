@@ -6,12 +6,16 @@ def login_view(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         
-        if email == "agata@wp.pl" and password == "agata":  # Sprawdzenie poprawności danych logowania
-            return redirect('urlop_dashboard') # Przekierowanie do widoku urlop_view po poprawnym logowaniu
+        if email == "agata@wp.pl" and password == "agata":
+            # Po poprawnym zalogowaniu idziesz na stronę 3
+            return redirect('urlopomat') 
         else:
             messages.error(request, "Nieprawidłowy e-mail lub hasło.")
             
     return render(request, 'login/index.html')
-
 def urlop_view(request):
-    return render(request, 'main/urlopomat.html') # Renderowanie szablonu urlopomat.html po zalogowaniu
+    # Teraz to jest strona główna (z napisem "Witaj")
+    return render(request, 'web/urlop.html')
+
+def urlopomat_view(request):
+    return render(request, 'urlopomat/urlopomat.html') # Renderowanie szablonu urlopomat.html po zalogowaniu
