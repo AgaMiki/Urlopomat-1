@@ -31,7 +31,6 @@ def login_view(request):
 def urlopomat_view(request):
     # Czyste renderowanie strony 3, bez żadnych ukrytych przekierowań
     return render(request, 'urlopomat/urlopomat.html')
-# Dodaj tę funkcję na dole pliku views.py:
 
 def wnioski_view(request):
     # Renderowanie szablonu wnioski.html z folderu wnioski

@@ -1,5 +1,4 @@
 from django.urls import path
-# Pamiętaj o dopisaniu wnioski_view do importu!
 from views import login_view, urlop_view, urlopomat_view, wnioski_view 
 
 urlpatterns = [
