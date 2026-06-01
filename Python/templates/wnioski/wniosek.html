@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje Wnioski | Urlopomat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { border-radius: 12px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .navbar-custom { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px; }
+        .navbar-custom .nav-link, .navbar-custom .navbar-brand { color: white !important; }
+    </style>
+</head>
+<body class="p-4">
+
+<div class="container">
+    <nav class="navbar navbar-expand navbar-custom p-3 mb-4 shadow">
+        <div class="container-fluid">
+            <span class="navbar-brand fw-bold">🌴 Urlopomat</span>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold" href="{% url 'urlopomat' %}">🏠 Powrót do Panelu</a>
+                </li>
+            </ul>
+            <div>
+                <a href="{% url 'urlop_dashboard' %}" class="btn btn-light fw-bold px-4">Wyloguj</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="card p-4">
+        <h3 class="fw-bold text-primary mb-4">📋 Lista Twoich wniosków urlopowych</h3>
+        
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#ID</th>
+                        <th>Typ urlopu</th>
+                        <th>Data rozpoczęcia</th>
+                        <th>Data zakończenia</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1024</td>
+                        <td>Urlop wypoczynkowy</td>
+                        <td>01.07.2026</td>
+                        <td>14.07.2026</td>
+                        <td><span class="badge bg-warning text-dark">Oczekuje na akceptację</span></td>
+                    </tr>
+                    <tr>
+                        <td>0981</td>
+                        <td>Urlop na żądanie</td>
+                        <td>15.05.2026</td>
+                        <td>15.05.2026</td>
+                        <td><span class="badge bg-success">Zaakceptowany</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
