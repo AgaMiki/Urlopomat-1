@@ -1,5 +1,20 @@
+import calendar
 from django.shortcuts import render, redirect
 from django.contrib import messages
+
+def urlop_view(request):
+    cal = calendar.HTMLCalendar(firstweekday=0)
+    html_kalendarz = cal.formatmonth(2026, 6)
+    
+    html_kalendarz = html_kalendarz.replace(
+        '<table border="0" cellpadding="0" cellspacing="0" class="month">',
+        '<table class="table table-bordered table-striped text-center mt-2">'
+    )
+    
+    context = {
+        'kalendarz': html_kalendarz
+    }
+    return render(request, 'web/urlop.html', context)
 
 def login_view(request):
     if request.method == 'POST':
@@ -7,15 +22,17 @@ def login_view(request):
         password = request.POST.get('password')
         
         if email == "agata@wp.pl" and password == "agata":
-            # Po poprawnym zalogowaniu idziesz na stronę 3
             return redirect('urlopomat') 
         else:
             messages.error(request, "Nieprawidłowy e-mail lub hasło.")
             
     return render(request, 'login/index.html')
-def urlop_view(request):
-    # Teraz to jest strona główna (z napisem "Witaj")
-    return render(request, 'web/urlop.html')
 
 def urlopomat_view(request):
-    return render(request, 'urlopomat/urlopomat.html') # Renderowanie szablonu urlopomat.html po zalogowaniu
+    # Czyste renderowanie strony 3, bez żadnych ukrytych przekierowań
+    return render(request, 'urlopomat/urlopomat.html')
+# Dodaj tę funkcję na dole pliku views.py:
+
+def wnioski_view(request):
+    # Renderowanie szablonu wnioski.html z folderu wnioski
+    return render(request, 'wnioski/wniosek.html')
