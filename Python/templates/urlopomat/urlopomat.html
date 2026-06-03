@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -5,73 +6,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Użytkownika | Urlopomat</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body class="bg-light p-4">
+<body>
 
-<div class="container">
-    <nav class="navbar navbar-expand navbar-dark bg-primary rounded p-3 mb-4 shadow-sm">
-        <div class="container-fluid">
-            <span class="navbar-brand fw-bold">🌴 Urlopomat</span>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link fw-semibold text-warning" href="{% url 'wnioski_page' %}">📋 Wnioski</a>
-                </li>
-            </ul>
-            <div>
-                <a href="{% url 'urlop_dashboard' %}" class="btn btn-light fw-bold px-4">Wyloguj</a>
-            </div>
+<div class="glowny-kontener">
+    <nav class="pasek-menu">
+        <span class="logo">🌴 Urlopomat</span>
+        <div class="menu-nawigacja">
+            <a href="{% url 'wnioski_page' %}" class="link-wnioski">📋 Wnioski</a>
+            <a href="{% url 'urlop_dashboard' %}" class="przycisk-wyloguj">Wyloguj</a>
         </div>
     </nav>
 
     <form method="POST" action="#">
         {% csrf_token %}
         
-        <div class="row g-4">
-            <div class="col-md-5">
-                <div class="card p-4 border-0 shadow-sm h-100">
-                    <h4 class="fw-bold text-primary mb-3">👤 Dane użytkownika</h4>
-                    <div class="mb-3">
-                        <label class="form-label text-muted small fw-bold">Zalogowany jako:</label>
-                        <p class="fs-5 fw-semibold text-dark mb-0">agata@wp.pl</p>
+        <div class="sekcja-glowna">
+            
+            <div class="sekcja-lewa-panel">
+                <div class="karta">
+                    <h3>👤 Dane użytkownika</h3>
+                    <div class="pole-info">
+                        <label>Zalogowany jako (Login):</label>
+                        <p class="tekst-wyrozni">{{ pracownik.login }}</p>
                     </div>
-                    <hr>
-                    <h5 class="fw-bold text-secondary mb-2">Krótkie informacje</h5>
-                    <ul class="list-unstyled text-muted mb-0">
-                        <li class="mb-2">📅 Pozostały urlop: <strong class="text-success">26 dni</strong></li>
-                        <li class="mb-2">🏖️ Wnioski w procesie: <strong class="text-warning">0</strong></li>
-                        <li>🏢 Dział: <strong class="text-dark">Zasoby Ludzkie (HR)</strong></li>
+                    
+                    <hr class="linia-podzialu">
+                    
+                    <h3>Informacje o pracowniku</h3>
+                    <ul class="lista-danych">
+                        <li>👤 Pracownik: <strong>{{ pracownik.imie }} {{ pracownik.nazwisko }}</strong></li>
+                        <li>📅 Pozostały urlop: <strong class="kolor-sukces">{{ pracownik.dostepne_dni }} dni</strong></li>
+                        <li>🏢 Status konta: <strong class="kolor-info">Aktywne</strong></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="col-md-7">
-                <div class="card p-4 border-0 shadow-sm h-100">
-                    <h4 class="fw-bold text-success mb-4">📅 Wybór terminu urlopu</h4>
+            <div class="sekcja-prawa-panel">
+                <div class="karta">
+                    <h3 class="kolor-sukces">📅 Wybór terminu urlopu</h3>
                     
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold text-secondary">Data rozpoczęcia:</label>
-                        <input type="date" name="data_start" class="form-control form-control-lg" required>
+                    <div class="pole-formularza">
+                        <label>Data rozpoczęcia:</label>
+                        <input type="date" name="data_start" required>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold text-secondary">Data zakończenia:</label>
-                        <input type="date" name="data_end" class="form-control form-control-lg" required>
+                    <div class="pole-formularza">
+                        <label>Data zakończenia:</label>
+                        <input type="date" name="data_end" required>
                     </div>
                     
-                    <div class="alert alert-info py-2 small mb-0">
+                    <div class="info-alert">
                         Wybierz zakres dat za pomocą systemowego wybieraka.
                     </div>
                 </div>
             </div>
+            
         </div>
 
-        <div class="row mt-4">
-            <div class="col-12 text-center">
-                <div class="p-3 bg-white card border-0 shadow-sm d-inline-block px-5">
-                    <button type="submit" class="btn btn-success btn-lg fw-bold px-5">
-                        Zatwierdzenie wniosku
-                    </button>
-                </div>
+        <div class="sekcja-dolna">
+            <div class="karta-przycisk">
+                <button type="submit" class="btn-akcja">
+                    Zatwierdzenie wniosku
+                </button>
             </div>
         </div>
         

@@ -1,0 +1,420 @@
+/* ==========================================================================
+   1. RESET I USTAWIENIA BAZOWE
+   ========================================================================== */
+body {
+    background-color: #f8f9fa;
+    font-family: system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 24px;
+}
+
+.glowny-kontener {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   2. PASKA MENU
+   ========================================================================== */
+.pasek-menu {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    padding: 16px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.pasek-menu .logo {
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.pasek-menu .przycisk-logowania {
+    background-color: white;
+    color: #764ba2;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 8px 24px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.pasek-menu .przycisk-logowania:hover {
+    background-color: #f1f3f5;
+}
+
+/* ==========================================================================
+   3. UKŁAD STRONY (SIATKA FLEXBOX)
+   ========================================================================== */
+.sekcja-glowna {
+    display: flex;
+    gap: 24px; /* Odstęp między lewą a prawą kolumną */
+}
+
+.sekcja-lewa {
+    flex: 7; /* Zajmuje 70% szerokości */
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sekcja-prawa {
+    flex: 5; /* Zajmuje 50% szerokości (w stosunku do całości) */
+}
+
+/* Na mniejszych ekranach (telefonach) zrób jedną kolumnę */
+@media (max-width: 768px) {
+    .sekcja-glowna {
+        flex-direction: column;
+    }
+}
+
+/* ==========================================================================
+   4. CZYSTE KARTY (ZAMIAST BOOTSTRAPOWYCH CARDS)
+   ========================================================================== */
+.karta {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.karta h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.karta p {
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   5. OPINIE I CYTATY
+   ========================================================================== */
+.cytat-box {
+    border-left: 4px solid #ffc107;
+    padding-left: 16px;
+    margin-bottom: 16px;
+}
+
+.cytat-box:last-child {
+    margin-bottom: 0;
+}
+
+.tekst-cytatu {
+    font-style: italic;
+    color: #495057 !important;
+    margin-bottom: 4px !important;
+}
+
+.autor {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* ==========================================================================
+   6. KALENDARZ (ZMIANA WYGLĄDU GENEROWANEJ TABELI)
+   ========================================================================== */
+.rok-etykieta {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+/* Ostylowanie tabeli z kalendarza, którą Django wkleja jako czysty HTML */
+.tabela-kalendarza table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.tabela-kalendarza th, 
+.tabela-kalendarza td {
+    padding: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.tabela-kalendarza th {
+    background-color: #f1f3f5;
+}
+/* ==========================================================================
+   7. DODATKI DLA PANELU UŻYTKOWNIKA (STRONA 3)
+   ========================================================================== */
+.menu-nawigacja {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.link-wnioski {
+    color: #ffc107;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.przycisk-wyloguj {
+    background-color: white;
+    color: #212529;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 6px;
+}
+
+/* Elastyczny podział dla panelu: lewa 5 części, prawa 7 części */
+.sekcja-lewa-panel { flex: 5; }
+.sekcja-prawa-panel { flex: 7; }
+
+.tekst-wyrozni {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.linia-podzialu {
+    border: 0;
+    border-top: 1px solid #dee2e6;
+    margin: 20px 0;
+}
+
+.lista-danych {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lista-danych li {
+    margin-bottom: 10px;
+    color: #6c757d;
+}
+
+/* Kolory pomocnicze tekstów */
+.kolor-sukces { color: #198754 !important; }
+.kolor-info { color: #0dcaf0 !important; }
+
+/* Stylowanie pól input w formularzu panelu */
+.pole-formularza {
+    margin-bottom: 20px;
+    max-width: 320px;
+}
+
+.pole-formularza label {
+    display: block;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 8px;
+    max-width: 320px;
+}
+
+.pole-formularza input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    max-width: 320px;
+}
+
+.info-alert {
+    background-color: #cff4fc;
+    color: #055160;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+/* Sekcja przycisku na dole */
+.sekcja-dolna {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.karta-przycisk {
+    display: inline-block;
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.btn-akcja {
+    background-color: #198754;
+    color: white;
+    border: none;
+    font-size: 1.25rem;
+    font-weight: 700;
+    padding: 12px 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-akcja:hover {
+    background-color: #146c43;
+}
+/* ==========================================================================
+   8. OBSŁUGA TABELI WNIOSKÓW I ODZNAK (STRONA 4)
+   ========================================================================== */
+.link-powrot {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.link-powrot:hover {
+    text-decoration: underline;
+}
+
+.kontener-tabeli {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 16px;
+}
+
+.tabela-wnioskow {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.tabela-wnioskow th,
+.tabela-wnioskow td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.tabela-wnioskow th {
+    background-color: #f1f3f5;
+    font-weight: 700;
+    color: #495057;
+}
+
+.tabela-wnioskow tbody tr:hover {
+    background-color: rgba(102, 126, 234, 0.04);
+}
+
+.brak-danych {
+    text-align: center;
+    color: #6c757d;
+    padding: 32px !important;
+}
+
+/* Własne odznaki statusów (Badges) */
+.odznaka {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 50px;
+    text-transform: capitalize;
+}
+
+.status-sukces {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-error {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.status-oczekujacy {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+/* ==========================================================================
+   9. DODATKI DLA EKRANU LOGOWANIA (STRONA 2)
+   ========================================================================== */
+.tekst-srodek {
+    text-align: center;
+}
+
+.kolor-glowny {
+    color: #667eea;
+    font-weight: 700;
+}
+
+.tekst-wyciszony {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* Czerwona ramka błędu w stylu aplikacji */
+.komunikat-blad {
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* Stylowanie przycisku logowania z gradientem */
+.btn-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-gradient:hover {
+    opacity: 0.9;
+}
+
+/* Ogólne wyrównanie dla inputów tekstowych na tej stronie */
+.login-card input[type="text"],
+.login-card input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    max-width: 320px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+/* ==========================================================================
+   POPRAWIONE LOGOWANIE (Wklej to w miejsce starych stylów logowania)
+   ========================================================================== */
+
+/* Kontener pozycjonujący okno logowania idealnie na środku ekranu */
+.login-wrapper {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centruje kartę w poziomie */
+    padding: 20px;
+}
+
+/* Zgrabne, mniejsze okienko logowania */
+.login-card {
+    width: 100%;
+    max-width: 340px !important; /* Blokujemy szerokość na ładne 340 pikseli */
+    box-sizing: border-box;
+}
+
+/* Sprawiamy, żeby podpisy Login/Hasło były wyrównane do lewej wewnątrz małej karty */
+.login-card .pole-formularza {
+    margin-bottom: 16px;
+    text-align: left; /* Zabezpiecza przed dziedziczeniem wyśrodkowania */
+}
+
+.login-card .pole-formularza label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #495057;
+    font-size: 0.9rem;
+}

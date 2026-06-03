@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -5,53 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urlopomat | Strona Główna</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body class="bg-light p-4">
+<body>
 
-<div class="container">
-    <nav class="navbar navbar-dark bg-primary rounded p-3 mb-4 shadow-sm">
-        <div class="container-fluid">
-            <span class="navbar-brand fw-bold">🌴 Urlopomat</span>
-            <div>
-                <a href="{% url 'login' %}" class="btn btn-light fw-bold px-4">Zaloguj</a>
-            </div>
-        </div>
+<div class="glowny-kontener">
+    <nav class="pasek-menu">
+        <span class="logo">🌴 Urlopomat</span>
+        <a href="{% url 'login' %}" class="przycisk-logowania">Zaloguj</a>
     </nav>
 
-    <div class="row g-4">
-        <div class="col-md-7">
-            <div class="card p-4 mb-4 border-0 shadow-sm">
-                <h4 class="fw-bold text-primary mb-3">O projekcie</h4>
-                <p class="text-muted">
-                    Witamy w systemie <strong>Urlopomat</strong>! Nasza aplikacja została stworzona z myślą o szybkim, intuicyjnym i bezproblemowym zarządzaniu urlopami oraz dniami wolnymi od pracy.
-                </p>
-                <p class="text-muted mb-0">
-                    Dzięki nam zaplanujesz swój wypoczynek, sprawdzisz dostępny limit dni urlopowych oraz prześlesz wniosek bezpośrednio do przełożonego w zaledwie kilka sekund.
-                </p>
+    <div class="sekcja-glowna">
+        
+        <div class="sekcja-lewa">
+            <div class="karta">
+                <h3>O projekcie</h3>
+                <p>Witamy w systemie <strong>Urlopomat</strong>! Nasza aplikacja została stworzona z myślą o szybkim, intuicyjnym i bezproblemowym zarządzaniu urlopami.</p>
+                <p>Dzięki nam zaplanujesz swój wypoczynek, sprawdzisz dostępny limit dni oraz prześlesz wniosek w zaledwie kilka sekund.</p>
             </div>
 
-            <div class="card p-4 border-0 shadow-sm">
-                <h4 class="fw-bold text-warning mb-3">Opinie użytkowników</h4>
-                <div class="border-start border-3 border-warning ps-3 mb-3">
-                    <p class="mb-1 text-secondary">"Najlepszy system do rezerwacji urlopów, z jakiego korzystałam w firmie!"</p>
-                    <small class="text-muted">- Kasia, HR Specialist</small>
+            <div class="karta">
+                <h3>Opinie użytkowników</h3>
+                <div class="cytat-box">
+                    <p class="tekst-cytatu">"Najlepszy system do rezerwacji urlopów, z jakiego korzystałam w firmie!"</p>
+                    <span class="autor">- Kasia, HR Specialist</span>
                 </div>
-                <div class="border-start border-3 border-warning ps-3">
-                    <p class="mb-1 text-secondary">"Wszystko w jednym miejscu, a kalendarz na głównej stronie ułatwia planowanie."</p>
-                    <small class="text-muted">- Tomasz, Developer</small>
+                <div class="cytat-box">
+                    <p class="tekst-cytatu">"Wszystko w jednym miejscu, a kalendarz na głównej stronie ułatwia planowanie."</p>
+                    <span class="autor">- Tomasz, Developer</span>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-5">
-            <div class="card p-4 border-0 shadow-sm h-100">
-                <h4 class="fw-bold text-success mb-3 text-center">📅 Kalendarz</h4>
-                <div class="text-center fw-bold mb-2">Czerwiec 2026</div>
-                
-                {{ kalendarz|safe }}
-                
+        <div class="sekcja-prawa">
+            <div class="karta">
+                <h3>📅 Kalendarz</h3>
+                <div class="rok-etykieta">Czerwiec 2026</div>
+                <div class="tabela-kalendarza">
+                    {{ kalendarz|safe }}
+                </div>
             </div>
         </div>
+
     </div>
 </div>
 
