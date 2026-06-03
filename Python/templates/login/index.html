@@ -35,14 +35,13 @@
                 {% csrf_token %}
                 <div class="pole-formularza">
                     <label>Login</label>
-                    <input type="text" name="email" placeholder="Login" required>
+                    <input type="text" name="email" placeholder="" required>
                 </div>
                 
                 <div class="pole-formularza">
                     <label>Hasło</label>
                     <input type="password" name="password" placeholder="••••••••" required>
                 </div>
-
                 <button type="submit" class="btn-gradient w-100">
                     Zaloguj do systemu
                 </button>
@@ -50,6 +49,15 @@
         </div>
     </div>
 </div>
+<!--Błędy ({% if messages %}): Jeśli logowanie się nie uda, Python przesyła informację o błędzie, a pętla wyświetla ją w czerwonej ramce.
 
+Formularz (<form method="POST">): Bezpiecznie pakuje wpisane dane i wysyła je do weryfikacji w Pythonie (views.py).
+
+Klucz ({% csrf_token %}): Ukryty token zabezpieczający aplikację przed hakerskimi próbami podrobienia formularza.
+
+Dane (name="email" / name="password"): Identyfikatory pól. Pod tymi nazwami Python odbiera w bazie wpisany login i hasło.
+
+Blokada (required): Zmusza użytkownika do uzupełnienia obu pól przed kliknięciem przycisku.-->
 </body>
+
 </html>

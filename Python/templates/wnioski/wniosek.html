@@ -37,23 +37,44 @@
                     {% for wniosek in wnioski %}
                         <tr>
                             <td>{{ wniosek.id }}</td>
-                            <td>{{ wniosek.opis|default:"Urlop wypoczynkowy" }}</td>
+                            <td>
+                                {% if pracownik.czy_admin %}
+                                    <strong>{{ wniosek.skladajacy.imie }} {{ wniosek.skladajacy.nazwisko }}</strong>
+                                {% else %}
+                                    {{ wniosek.opis|default:"Urlop wypoczynkowy" }}
+                                {% endif %}
+                            </td>
                             <td>{{ wniosek.data_od|date:"d.m.Y" }}</td>
                             <td>{{ wniosek.data_do|date:"d.m.Y" }}</td>
                             <td>
-                                {% if wniosek.status == 'zaakceptowany' %}
-                                    <span class="odznaka status-sukces">{{ wniosek.status }}</span>
-                                {% elif wniosek.status == 'odrzucony' %}
-                                    <span class="odznaka status-error">{{ wniosek.status }}</span>
+                                {% if wniosek.status == 'oczekujacy' and pracownik.czy_admin %}
+                                    <div class="akcje-admina">
+                                        <form method="POST" style="display:inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="wniosek_id" value="{{ wniosek.id }}">
+                                            <button type="submit" name="akcja" value="zaakceptuj" class="btn-mini status-sukces">Akceptuj</button>
+                                        </form>
+                                        <form method="POST" style="display:inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="wniosek_id" value="{{ wniosek.id }}">
+                                            <button type="submit" name="akcja" value="odrzuc" class="btn-mini status-error">Odrzuć</button>
+                                        </form>
+                                    </div>
                                 {% else %}
-                                    <span class="odznaka status-oczekujacy">{{ wniosek.status }}</span>
+                                    {% if wniosek.status == 'zaakceptowany' %}
+                                        <span class="odznaka status-sukces">{{ wniosek.status }}</span>
+                                    {% elif wniosek.status == 'odrzucony' %}
+                                        <span class="odznaka status-error">{{ wniosek.status }}</span>
+                                    {% else %}
+                                        <span class="odznaka status-oczekujacy">{{ wniosek.status }}</span>
+                                    {% endif %}
                                 {% endif %}
                             </td>
                         </tr>
                     {% empty %}
                         <tr>
                             <td colspan="5" class="brak-danych">
-                                Brak złożonych wniosków urlopowych.
+                                Brak wniosków urlopowych w systemie.
                             </td>
                         </tr>
                     {% endfor %}
@@ -62,6 +83,14 @@
         </div>
     </div>
 </div>
+<!--Widok dynamiczny kolumny opisu ({% if pracownik.czy_admin %}): Jeśli zalogowany użytkownik to kierownik/admin, w tabeli zamiast nazwy urlopu pojawia się imię i nazwisko pracownika, który złożył wniosek.
 
+Formatowanie dat (|date:"d.m.Y"): Konwertuje bazy danych formaty dat na czytelny dla polskiego użytkownika zapis (np. 15.06.2026).
+
+Decyzje admina (Formularze POST): Wyświetla dwa miniaturowe formularze z przyciskami "Akceptuj" i "Odrzuć" tylko wtedy, gdy wniosek ma status oczekujacy, a użytkownikiem przeglądającym jest administrator.
+
+Kolorowe odznaki statusu: Gdy wniosek zostanie rozpatrzony (lub gdy patrzy na niego zwykły pracownik), zamiast przycisków renderuje się kolorowa etykieta tekstowa.
+
+Obsługa pustej bazy ({% empty %}): Automatycznie generuje komunikat o braku danych, jeśli lista przekazana z Pythona nie zawiera żadnych wniosków.-->
 </body>
 </html>

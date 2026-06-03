@@ -418,3 +418,24 @@ body {
     color: #495057;
     font-size: 0.9rem;
 }
+/* ==========================================================================
+   10. PRZYCISKI DECYZJI ADMINA
+   ========================================================================== */
+.akcje-admina {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-mini {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-mini:hover {
+    opacity: 0.8;
+}
