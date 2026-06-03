@@ -4,3 +4,6 @@ Wpisz w terminal by odpalić serwer:
 2. Uruchom serwer Django
 python manage.py runserver
 ---------------------------------------------------------
+rm db.sqlite3
+python manage.py migrate
+python manage.py dane_testowe

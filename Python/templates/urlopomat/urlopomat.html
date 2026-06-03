@@ -47,6 +47,14 @@
                 <div class="karta">
                     <h3 class="kolor-sukces">📅 Wybór terminu urlopu</h3>
                     
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-danger mt-2 mb-3" role="alert" style="font-weight: bold;">
+                                ⚠️ {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
                     <div class="pole-formularza">
                         <label>Data rozpoczęcia:</label>
                         <input type="date" name="data_start" required>
@@ -56,9 +64,21 @@
                         <label>Data zakończenia:</label>
                         <input type="date" name="data_end" required>
                     </div>
+
+                    <div class="pole-formularza mt-3">
+                        <label style="font-weight: bold; margin-bottom: 5px;">Typ wnioskowanego urlopu:</label>
+                        <div class="d-flex gap-4 mt-1">
+                            <label style="cursor: pointer;">
+                                <input type="radio" name="typ_platnosci" value="platny" required> Płatny
+                            </label>
+                            <label style="cursor: pointer;">
+                                <input type="radio" name="typ_platnosci" value="bezplatny" required> Bezpłatny
+                            </label>
+                        </div>
+                    </div>
                     
-                    <div class="info-alert">
-                        Wybierz zakres dat za pomocą systemowego wybieraka.
+                    <div class="info-alert mt-3">
+                        Wybierz zakres dat oraz określ typ odpłatności przed wysłaniem wniosku.
                     </div>
                 </div>
             </div>
@@ -75,5 +95,6 @@
         
     </form>
 </div>
+
 </body>
 </html>

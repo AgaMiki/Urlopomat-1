@@ -1,4 +1,5 @@
 import calendar
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from core.models import Pracownik, Wnioski 
@@ -44,7 +45,7 @@ def login_view(request):
 #          bibliotekę Pythona 'calendar' do wygenerowania surowego kalendarza
 #          HTML dla wybranego miesiąca (Czerwiec 2026).
 # Zwraca: HttpResponse - wyrenderowany szablon strony startowej ('web/urlop.html')
-#         wraz ze zmienną 'kalendarz' przekazaną do kontekstu.
+#          wraz ze zmienną 'kalendarz' przekazaną do kontekstu.
 # ==========================================================================
 def urlop_view(request):
     cal = calendar.HTMLCalendar(firstweekday=0)
@@ -56,12 +57,11 @@ def urlop_view(request):
 # Funkcja: urlopomat_view
 # Przyjmuje: request (HttpRequest) - obiekt żądania przeglądarki
 # Co robi: Obsługuje prywatny panel składania wniosków urlopowych. Sprawdza
-#          czy użytkownik jest uwierzytelniony w sesji. Jeśli otrzyma żądanie
-#          POST, pobiera wybrane daty startu/końca urlopu i zapisuje w bazie
-#          nowy wniosek ze statusem "oczekujacy".
+#          czy użytkownik jest zalogowany. Przy POST pobiera daty oraz informację
+#          czy urlop ma być płatny. Jeśli wybrano urlop płatny, wylicza dni
+#          i blokuje wysłanie wniosku, jeśli pracownik przekracza swój limit.
 # Zwraca: HttpResponse - przekierowanie do listy wniosków ('wnioski_page') 
-#         po udanym zapisie formularza lub wyrenderowany widok panelu głównego
-#         ('urlopomat/urlopomat.html') z danymi zalogowanego pracownika.
+#         po udanym zapisie lub ponowne wyrenderowanie panelu z komunikatem błędu.
 # ==========================================================================
 def urlopomat_view(request):
     pracownik_id = request.session.get('pracownik_id')
@@ -71,32 +71,44 @@ def urlopomat_view(request):
     pracownik = Pracownik.objects.get(id=pracownik_id)
 
     if request.method == 'POST':
-        data_start = request.POST.get('data_start')
-        data_end = request.POST.get('data_end')
+        data_start_str = request.POST.get('data_start')
+        data_end_str = request.POST.get('data_end')
+        typ_platnosci = request.POST.get('typ_platnosci')
+        
+        data_od = datetime.strptime(data_start_str, '%Y-%m-%d').date()
+        data_do = datetime.strptime(data_end_str, '%Y-%m-%d').date()
+        
+        dni_urlopu = (data_do - data_od).days + 1
+        czy_platny_bool = (typ_platnosci == 'platny')
+        
+        if czy_platny_bool and dni_urlopu > pracownik.dostepne_dni:
+            messages.error(
+                request, 
+                f"Nie masz wystarczającej liczby dni! Wnioskujesz o {dni_urlopu} dni, a pozostało Ci tylko {pracownik.dostepne_dni}."
+            )
+            return render(request, 'urlopomat/urlopomat.html', {'pracownik': pracownik})
         
         Wnioski.objects.create(
             skladajacy=pracownik,
-            data_od=data_start,
-            data_do=data_end,
+            data_od=data_od,
+            data_do=data_do,
+            czy_platny=czy_platny_bool,
             status="oczekujacy"
         )
-        messages.success(request, "Wniosek został wysłany.")
+        messages.success(request, "Wniosek został pomyślnie wysłany.")
         return redirect('wnioski_page')
 
     return render(request, 'urlopomat/urlopomat.html', {'pracownik': pracownik})
-
-
 # ==========================================================================
 # Funkcja: wnioski_view
 # Przyjmuje: request (HttpRequest) - obiekt żądania przeglądarki
 # Co robi: Obsługuje podgląd oraz modyfikację statusów wniosków. Weryfikuje sesję.
 #          1. Jeśli żądanie to POST, a użytkownik jest adminem, zmienia status
-#             wniosku na zaakceptowany (i odejmuje dni z puli pracownika) lub odrzucony.
-#          2. Przy żądaniu GET pobiera zestaw danych: dla admina wszystkie wnioski
-#             w systemie, dla zwykłego pracownika wyłącznie jego własne (sortowane od najnowszych).
+#             wniosku. Jeśli zaakceptowany wniosek był płatny, pomniejsza pulę dni.
+#             Generuje odpowiednie komunikaty powodzenia (messages.success).
+#          2. Przy żądaniu GET pobiera zestaw danych filtrowany po uprawnieniach.
 # Zwraca: HttpResponse - przekierowanie odświeżające stronę ('wnioski_page') po
-#         podjęciu decyzji przez admina lub wyrenderowaną stronę z tabelą
-#         ('wnioski/wniosek.html') zawierającą listę wniosków i obiekt pracownika.
+#         modyfikacji lub wyrenderowany widok szablonu listy z kontekstem danych.
 # ==========================================================================
 def wnioski_view(request):
     pracownik_id = request.session.get('pracownik_id')
@@ -113,11 +125,16 @@ def wnioski_view(request):
         
         if akcja == 'zaakceptuj':
             wniosek.status = 'zaakceptowany'
-            dni = (wniosek.data_do - wniosek.data_od).days + 1
-            wniosek.skladajacy.dostepne_dni -= dni
-            wniosek.skladajacy.save()
+            if wniosek.czy_platny:
+                dni = (wniosek.data_do - wniosek.data_od).days + 1
+                wniosek.skladajacy.dostepne_dni -= dni
+                wniosek.skladajacy.save()
+                messages.success(request, f"Zaakceptowano płatny wniosek #{wniosek.id}. Odliczono dni: {dni}.")
+            else:
+                messages.success(request, f"Zaakceptowano bezpłatny wniosek #{wniosek.id}. Pula dni pracownika nie została zmieniona.")
         elif akcja == 'odrzuc':
             wniosek.status = 'odrzucony'
+            messages.success(request, f"Wniosek #{wniosek.id} został odrzucony.")
             
         wniosek.rozpatrujacy = pracownik
         wniosek.save()
