@@ -1,5 +1,5 @@
 import calendar
-from datetime import datetime
+from datetime import datetime,date
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from core.models import Pracownik, Wnioski 
@@ -41,25 +41,37 @@ def login_view(request):
 # ==========================================================================
 # Funkcja: urlop_view
 # Przyjmuje: request (HttpRequest) - obiekt żądania przeglądarki
-# Co robi: Generuje publiczną stronę główną systemu. Wykorzystuje wbudowaną
-#          bibliotekę Pythona 'calendar' do wygenerowania surowego kalendarza
-#          HTML dla wybranego miesiąca (Czerwiec 2026).
+# Co robi: Generuje publiczną stronę główną systemu. Dynamicznie pobiera 
+#          aktualną datę systemową, generuje kalendarz dla bieżącego miesiąca
+#          i roku, a następnie automatycznie lokalizuje i podświetla w kodzie 
+#          HTML dzisiejszy dzień (np. 4 czerwca 2026).
 # Zwraca: HttpResponse - wyrenderowany szablon strony startowej ('web/urlop.html')
 #          wraz ze zmienną 'kalendarz' przekazaną do kontekstu.
 # ==========================================================================
 def urlop_view(request):
-    cal = calendar.HTMLCalendar(firstweekday=0)
-    html_kalendarz = cal.formatmonth(2026, 6)
-    return render(request, 'web/urlop.html', {'kalendarz': html_kalendarz})
+    dzisiaj = date.today()
+    aktualny_rok = dzisiaj.year
+    aktualny_miesiac = dzisiaj.month
+    aktualny_dzien = dzisiaj.day
 
+    cal = calendar.HTMLCalendar(firstweekday=0)
+    html_kalendarz = cal.formatmonth(aktualny_rok, aktualny_miesiac)
+    
+    szukana_komorka = f'<td>{aktualny_dzien}</td>'
+    podmieniona_komorka = f'<td><span class="dzisiaj">{aktualny_dzien}</span></td>'
+    
+    html_kalendarz = html_kalendarz.replace(szukana_komorka, podmieniona_komorka)
+    
+    return render(request, 'web/urlop.html', {'kalendarz': html_kalendarz})
 
 # ==========================================================================
 # Funkcja: urlopomat_view
 # Przyjmuje: request (HttpRequest) - obiekt żądania przeglądarki
 # Co robi: Obsługuje prywatny panel składania wniosków urlopowych. Sprawdza
 #          czy użytkownik jest zalogowany. Przy POST pobiera daty oraz informację
-#          czy urlop ma być płatny. Jeśli wybrano urlop płatny, wylicza dni
-#          i blokuje wysłanie wniosku, jeśli pracownik przekracza swój limit.
+#          czy urlop ma być płatny. Weryfikuje poprawność chronologiczną dat.
+#          Jeśli wybrano urlop płatny, wylicza dni i blokuje wysłanie wniosku,
+#          jeśli pracownik przekracza swój limit dostępnych dni urlopowych.
 # Zwraca: HttpResponse - przekierowanie do listy wniosków ('wnioski_page') 
 #         po udanym zapisie lub ponowne wyrenderowanie panelu z komunikatem błędu.
 # ==========================================================================
@@ -77,6 +89,13 @@ def urlopomat_view(request):
         
         data_od = datetime.strptime(data_start_str, '%Y-%m-%d').date()
         data_do = datetime.strptime(data_end_str, '%Y-%m-%d').date()
+        
+        if data_do < data_od:
+            messages.error(
+                request, 
+                "Błąd: Data zakończenia urlopu nie może być wcześniejsza niż data jego rozpoczęcia!"
+            )
+            return render(request, 'urlopomat/urlopomat.html', {'pracownik': pracownik})
         
         dni_urlopu = (data_do - data_od).days + 1
         czy_platny_bool = (typ_platnosci == 'platny')

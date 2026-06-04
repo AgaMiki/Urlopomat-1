@@ -35,7 +35,9 @@
                 <thead>
                     <tr>
                         <th>#ID</th>
-                        <th>Wnioskujący</th>
+                        {% if pracownik.czy_admin %}
+                            <th>Pracownik</th>
+                        {% endif %}
                         <th>Typ urlopu</th>
                         <th>Data rozpoczęcia</th>
                         <th>Data zakończenia</th>
@@ -47,7 +49,11 @@
                     {% for wniosek in wnioski %}
                         <tr>
                             <td>{{ wniosek.id }}</td>
-                            <td>{{ wniosek.skladajacy.imie }} {{ wniosek.skladajacy.nazwisko }}</td>
+                            {% if pracownik.czy_admin %}
+                                <td>
+                                    <strong>{{ wniosek.skladajacy.imie }} {{ wniosek.skladajacy.nazwisko }}</strong>
+                                </td>
+                            {% endif %}
                             <td>
                                 {% if wniosek.czy_platny %}
                                     <span class="badge bg-success text-white" style="padding: 5px 10px; border-radius: 4px; font-size: 12px;">Płatny</span>
@@ -91,7 +97,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="7" class="brak-danych">
+                            <td colspan="{% if pracownik.czy_admin %}7{% else %}6{% endif %}" class="brak-danych">
                                 Brak wniosków urlopowych w systemie.
                             </td>
                         </tr>
