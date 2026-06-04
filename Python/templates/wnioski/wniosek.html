@@ -41,6 +41,7 @@
                         <th>Typ urlopu</th>
                         <th>Data rozpoczęcia</th>
                         <th>Data zakończenia</th>
+                        <th>Rozpatrzył</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -62,6 +63,13 @@
                             </td>
                             <td>{{ wniosek.data_od|date:"d.m.Y" }}</td>
                             <td>{{ wniosek.data_do|date:"d.m.Y" }}</td>
+                            <td>
+                                {% if wniosek.rozpatrujacy %}
+                                    {{ wniosek.rozpatrujacy.imie }} {{ wniosek.rozpatrujacy.nazwisko }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if wniosek.status == 'oczekujacy' and pracownik.czy_admin %}
                                     <div class="akcje-admina">
@@ -85,11 +93,11 @@
                                         <span class="odznaka status-oczekujacy">{{ wniosek.status }}</span>
                                     {% endif %}
                                 {% endif %}
-                            </td>
+                            </td>                         
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="{% if pracownik.czy_admin %}6{% else %}5{% endif %}" class="brak-danych">
+                            <td colspan="{% if pracownik.czy_admin %}7{% else %}6{% endif %}" class="brak-danych">
                                 Brak wniosków urlopowych w systemie.
                             </td>
                         </tr>
