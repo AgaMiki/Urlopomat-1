@@ -14,6 +14,9 @@
     <nav class="pasek-menu">
         <span class="logo">🌴 Urlopomat</span>
         <div class="menu-nawigacja">
+            {% if pracownik.czy_admin %}
+                <a href="{% url 'panel_admina' %}" class="link-wnioski">📊 Panel</a>
+            {% endif %}
             <a href="{% url 'wnioski_page' %}" class="link-wnioski">📋 Wnioski</a>
             <a href="{% url 'urlop_dashboard' %}" class="przycisk-wyloguj">Wyloguj</a>
         </div>

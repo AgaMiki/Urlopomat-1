@@ -1,9 +1,9 @@
-import calendar
+import calendar, random
 from datetime import datetime,date
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from core.models import Pracownik, Wnioski 
-
+from django.db.models import Count
 # ==========================================================================
 # Funkcja: login_view
 # Przyjmuje: request (HttpRequest) - obiekt żądania przeglądarki
@@ -169,3 +169,54 @@ def wnioski_view(request):
         'pracownik': pracownik
     }
     return render(request, 'wnioski/wniosek.html', context)
+
+def panel_admina_view(request):
+    pracownik_id = request.session.get('pracownik_id')
+    if not pracownik_id:
+        return redirect('login')
+
+    pracownik = Pracownik.objects.get(id=pracownik_id)
+    
+    if not pracownik.czy_admin:
+        return redirect('urlopomat')
+
+    if request.method == 'POST' and 'dodaj_pracownika' in request.POST:
+        imie = request.POST.get('imie').strip()
+        nazwisko = request.POST.get('nazwisko').strip()
+        dostepne_dni = int(request.POST.get('dostepne_dni', 26))
+        czy_admin_input = request.POST.get('czy_admin') == 'on'
+
+        if imie and nazwisko:
+            generowany_login = f"{imie[0].lower()}{nazwisko.lower()}".replace(" ", "")
+            
+            licznik = 1
+            propozycja_loginu = generowany_login
+            while Pracownik.objects.filter(login=propozycja_loginu).exists():
+                propozycja_loginu = f"{generowany_login}{licznik}"
+                licznik += 1
+            generowany_login = propozycja_loginu
+            losowe_cyfry = "".join([str(random.randint(0, 9)) for _ in range(3)])
+            generowane_haslo = f"{imie}{losowe_cyfry}"
+            nowy_pracownik = Pracownik(
+                imie=imie,
+                nazwisko=nazwisko,
+                login=generowany_login,
+                dostepne_dni=dostepne_dni,
+                czy_admin=czy_admin_input,
+                czy_aktywny=True 
+            )
+            nowy_pracownik.ustaw_haslo(generowane_haslo)
+            nowy_pracownik.save()
+
+            messages.success(
+                request, 
+                f"Pomyślnie dodano pracownika! Login: {generowany_login} | Wygenerowane hasło: {generowane_haslo}"
+            )
+            return redirect('panel_admina')
+    pracownicy_lista = Pracownik.objects.annotate(liczba_wnioskow=Count('zlozone_wnioski'))
+
+    context = {
+        'pracownik': pracownik,
+        'pracownicy_lista': pracownicy_lista
+    }
+    return render(request, 'panel/panel.html', context)

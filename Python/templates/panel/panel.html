@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administratora | Urlopomat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="glowny-kontener">
+    <nav class="pasek-menu">
+        <span class="logo">🌴 Urlopomat</span>
+        <div class="menu-nawigacja">
+            {% if pracownik.czy_admin %}
+                <a href="{% url 'panel_admina' %}" class="link-wnioski" style="background-color: rgba(255,255,255,0.2); border-radius: 4px; padding: 5px 10px;">📊 Panel</a>
+            {% endif %}
+            <a href="{% url 'wnioski_page' %}" class="link-wnioski">📋 Wnioski</a>
+            <a href="{% url 'urlopomat' %}" class="link-powrot">Powrót do strony głównej</a>
+            <a href="{% url 'urlop_dashboard' %}" class="przycisk-wyloguj">Wyloguj</a>
+        </div>
+    </nav>
+
+    <div class="karta">
+        <h3>📊 Panel Administratora - Statystyki Pracowników</h3>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success mt-3 mb-3" role="alert" style="font-weight: bold; font-size: 15px;">
+                    ✅ {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class="kontener-tabeli mb-4">
+            <table class="tabela-wnioskow">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>Imię i nazwisko</th>
+                        <th>Login (E-mail)</th>
+                        <th>Pozostały urlop</th>
+                        <th>Złożone wnioski (łącznie)</th>
+                        <th>Status konta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in pracownicy_lista %}
+                        <tr>
+                            <td>{{ p.id }}</td>
+                            <td><strong>{{ p.imie }} {{ p.nazwisko }}</strong></td>
+                            <td>{{ p.login }}</td>
+                            <td>
+                                <span class="badge bg-success text-white" style="padding: 5px 10px; border-radius: 4px; font-size: 13px;">
+                                    {{ p.dostepne_dni }} dni
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary text-white" style="padding: 5px 10px; border-radius: 4px; font-size: 13px;">
+                                    {{ p.liczba_wnioskow }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if p.czy_aktywny %}
+                                    <span class="badge bg-info text-white" style="padding: 5px 10px; border-radius: 4px; font-size: 13px; background-color: #17a2b8 !important;">
+                                        Aktywne
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary text-white" style="padding: 5px 10px; border-radius: 4px; font-size: 13px;">
+                                        Nieaktywne
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="brak-danych">Brak pracowników w systemie.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn text-white" data-bs-toggle="modal" data-bs-target="#modalPracownik" style="background: linear-gradient(135deg, #6f42c1, #4e2294); font-weight: bold; padding: 10px 20px; box-shadow: 0 3px 6px rgba(111,66,193,0.3);">
+                ➕ Dodaj nowego pracownika
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalPracownik" tabindex="-1" aria-labelledby="modalPracownikLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 8px;">
+            <div class="modal-header text-white" style="background: linear-gradient(135deg, #6f42c1, #4e2294);">
+                <h5 class="modal-title" id="modalPracownikLabel">👤 Tworzenie nowego konta pracownika</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-shadow="none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="modal-body" style="padding: 25px;">
+                    <div class="mb-3">
+                        <label class="form-label" style="font-weight: bold; color: #495057;">Imię:</label>
+                        <input type="text" name="imie" class="form-control" placeholder="np. Agata" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-weight: bold; color: #495057;">Nazwisko:</label>
+                        <input type="text" name="nazwisko" class="form-control" placeholder="np. Kowalska" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-weight: bold; color: #495057;">Roczna pula dni urlopu:</label>
+                        <input type="number" name="dostepne_dni" class="form-control" value="26" min="0" required>
+                    </div>
+                    <div class="form-check form-switch mt-4">
+                        <input class="form-check-input" type="checkbox" name="czy_admin" id="switchAdmin">
+                        <label class="form-check-label" for="switchAdmin" style="font-weight: bold; color: #495057; cursor: pointer;">
+                            Nadaj uprawnienia administratora
+                        </label>
+                    </div>
+                    <div class="alert alert-secondary mt-4 mb-0" style="font-size: 12px; background-color: #f8f9fa; border-color: #dee2e6; color: #6c757d;">
+                        ℹ️ <strong>Automatyzacja:</strong> Login (np. <em>akowalska</em>) oraz losowe hasło zostaną wygenerowane automatycznie przez system po zapisaniu formularza.
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #f8f9fa;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                    <button type="submit" name="dodaj_pracownika" class="btn text-white" style="background-color: #6f42c1; font-weight: bold;">Zapisz i wygeneruj konto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
