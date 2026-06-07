@@ -1,11 +1,10 @@
 from django.core.management.base import BaseCommand
+from datetime import date
 from core.models import Pracownik, Wnioski
-from datetime import date, timedelta
 from django.utils import timezone
 
 
 class Command(BaseCommand):
-    help = "Tworzy przykładowych pracowników i wnioski urlopowe"
 
     def handle(self, *args, **options):
         # czyścimy stare dane, żeby nie dublować przy ponownym odpaleniu
@@ -64,7 +63,4 @@ class Command(BaseCommand):
             status="odrzucony",
         )
 
-        self.stdout.write(self.style.SUCCESS(
-            f"Gotowe: {Pracownik.objects.count()} pracowników, "
-            f"{Wnioski.objects.count()} wniosków."
-        ))
+        print(f"Gotowe: {Pracownik.objects.count()} pracowników, {Wnioski.objects.count()} wniosków.")
