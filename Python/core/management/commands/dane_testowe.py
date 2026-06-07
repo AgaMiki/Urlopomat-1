@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from datetime import date
 from core.models import Pracownik, Wnioski
 from django.utils import timezone
+from django.db import connection
 
 
 class Command(BaseCommand):
@@ -10,6 +11,11 @@ class Command(BaseCommand):
         # czyścimy stare dane, żeby nie dublować przy ponownym odpaleniu
         Wnioski.objects.all().delete()
         Pracownik.objects.all().delete()
+
+        # resetujemy licznik ID, żeby nowe rekordy znów szły od 1
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM sqlite_sequence WHERE name='core_wnioski';")
+            cursor.execute("DELETE FROM sqlite_sequence WHERE name='core_pracownik';")
 
         # --- pracownicy ---
         admin = Pracownik(imie="Agata", nazwisko="Kowalska", login="akowalska", czy_admin=True)
