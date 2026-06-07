@@ -184,6 +184,7 @@ def panel_admina_view(request):
         imie = request.POST.get('imie').strip()
         nazwisko = request.POST.get('nazwisko').strip()
         dostepne_dni = int(request.POST.get('dostepne_dni', 26))
+        pula_roczna = int(request.POST.get('pula_roczna', 26))
         czy_admin_input = request.POST.get('czy_admin') == 'on'
 
         if imie and nazwisko:
@@ -202,6 +203,7 @@ def panel_admina_view(request):
                 nazwisko=nazwisko,
                 login=generowany_login,
                 dostepne_dni=dostepne_dni,
+                pula_roczna=pula_roczna,
                 czy_admin=czy_admin_input,
                 czy_aktywny=True 
             )
